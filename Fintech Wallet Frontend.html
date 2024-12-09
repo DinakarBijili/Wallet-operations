@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fintech Wallet System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Fintech Wallet System</h1>
+    </header>
+
+    <main>
+        <section id="user-dashboard">
+            <h2>User Dashboard</h2>
+
+            <div id="registration">
+                <h3>Register</h3>
+                <form id="registration-form">
+                    <input type="text" id="name" placeholder="Name" required />
+                    <input type="email" id="email" placeholder="Email" required />
+                    <input type="text" id="phone_number" placeholder="Phone Number" required />
+                    <button type="button" onclick="registerUser()">Register</button>
+                </form>
+                <p id="registration-response"></p>
+            </div>
+
+            <div id="wallet-operations">
+                <h3>Wallet Operations</h3>
+                <label for="wallet_id">Wallet ID:</label>
+                <input type="text" id="wallet_id" placeholder="Enter Wallet ID" required />
+
+                <button id="check-balance" onclick="checkBalance()">Check Balance</button>
+                <p id="balance-display"></p>
+
+                <h4>Add Money</h4>
+                <input type="number" id="add-money-amount" placeholder="Enter Amount" required />
+                <button id="add-money">Add Money</button>
+
+                <h4>Transaction History</h4>
+                <button id="view-transactions">View Transactions</button>
+                <ul id="transaction-list"></ul>
+            </div>
+        </section>
+
+        <section id="admin-dashboard">
+            <h2>Admin Dashboard</h2>
+
+            <div id="wallet-management">
+                <h3>All Wallets</h3>
+                <button id="view-wallets">View Wallets</button>
+                <ul id="wallet-list"></ul>
+            </div>
+
+            <div id="transaction-management">
+                <h3>All Transactions</h3>
+                <button id="view-all-transactions">View All Transactions</button>
+                <ul id="all-transaction-list"></ul>
+            </div>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const registerUser = async () => {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone_number = document.getElementById('phone_number').value;
+
+            try {
+                const response = await axios.post('http://127.0.0.1:5000/api/register', {
+                    name: name,
+                    email: email,
+                    phone_number: phone_number
+                });
+
+                document.getElementById('registration-response').textContent = `Registration successful! Wallet ID: ${response.data.wallet_id}`;
+                document.getElementById('registration-response').style.color = 'green';
+            } catch (error) {
+                document.getElementById('registration-response').textContent = `Error: ${error.response?.data?.error || 'Registration failed'}`;
+                document.getElementById('registration-response').style.color = 'red';
+            }
+        };
+
+        const checkBalance=async()=>{
+        console.log("00000000")
+const walletId = document.getElementById('wallet_id').value;
+console.log('Wallet ID:', walletId);
+          const response = await axios.get(`http://127.0.0.1:5000/api/wallet/${walletId}/balance`);
+        }
+    </script>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
