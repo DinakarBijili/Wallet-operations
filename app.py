@@ -44,7 +44,13 @@ def add_money():
     wallet_id = data.get('wallet_id')
     amount = data.get('amount')
 
-    if not wallet_id or not amount or amount <= 0:
+    # Convert amount to a float to avoid TypeError
+    try:
+        amount = float(amount)
+    except ValueError:
+        return jsonify({"error": "Invalid amount value"}), 400
+
+    if not wallet_id or amount <= 0:
         return jsonify({"error": "Invalid wallet ID or amount"}), 400
 
     user = users_collection.find_one({"wallet_id": wallet_id})
@@ -63,6 +69,7 @@ def add_money():
     transactions_collection.insert_one(transaction)
 
     return jsonify({"wallet_id": wallet_id, "balance": new_balance}), 200
+
 
 @app.route('/api/wallet/<wallet_id>/balance', methods=['GET'])
 def check_balance(wallet_id):
